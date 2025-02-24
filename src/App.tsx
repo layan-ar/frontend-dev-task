@@ -14,15 +14,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-
-// function App() {
-//   return (
-//     <div className="p-5">
-//       <h1 className="text-xl font-bold">Employee Management</h1>
-//       <AddEmployee />
-//       <EmployeesList />
-//     </div>
-//   );
-// }
-
-// export default App;

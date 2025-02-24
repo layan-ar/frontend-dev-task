@@ -1,9 +1,8 @@
 import React from "react";
-import useFetchEmployees from "./useFetchEmployees"; // Import the custom hook
+import useFetchEmployees from "./useFetchEmployees"; 
 
 const EmployeesList: React.FC = () => {
-    const { employees, loading, error } = useFetchEmployees("http://localhost:3000/employees"); // Call the hook
-
+    const { employees, loading, error } = useFetchEmployees("http://localhost:3000/employees"); 
     if (loading) return <p>Loading employees...</p>;
     if (error) return <p>Error: {error}</p>;
 
