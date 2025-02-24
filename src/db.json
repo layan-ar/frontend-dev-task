@@ -6,7 +6,8 @@
       "last_name": "Doe",
       "email": "johndoe@abc.com",
       "gender": "Male",
-      "status": "Terminated"
+      "status": "Active",
+      "description": "Senior Developer with 5 years of experience"
     },
     {
       "id": "2",
@@ -14,15 +15,17 @@
       "last_name": "Doe",
       "email": "janedoe@abc.com",
       "gender": "Female",
-      "status": "New"
+      "status": "Leaving",
+      "description": "Frontend Developer specializing in React.js!"
     },
     {
       "id": "3",
       "first_name": "Alice",
-      "last_name": "Doe",
+      "last_name": "Doeeee",
       "email": "alicedoe@abc.com",
       "gender": "Female",
-      "status": "Leaving"
+      "status": "Active",
+      "description": "Product Manager for mobile applications"
     },
     {
       "id": "4",
@@ -30,25 +33,32 @@
       "last_name": "Doe",
       "email": "bobdoe@abc.com",
       "gender": "Male",
-      "status": "Active"
+      "status": "Terminated",
+      "description": "DevOps Engineer managing cloud infrastructure."
     },
     {
-      "id": "f67f",
+      "id": "feb6",
       "first_name": "Layan",
       "last_name": "Alsalah",
-      "status": "Active"
+      "email": "abc@abc.com",
+      "status": "Active",
+      "description": "Undergraduate Student at American University of Sharjah."
     },
     {
-      "id": "2afc",
-      "first_name": "Layan",
-      "last_name": "a",
-      "status": "aa"
+      "id": "9319",
+      "first_name": "Renad",
+      "last_name": "Aref",
+      "email": "abcd@abc.com",
+      "status": "New",
+      "description": "New intern."
     },
     {
-      "id": "d306",
-      "first_name": "Hi",
-      "last_name": "ll",
-      "status": "New"
+      "id": "b62c",
+      "first_name": "Abdullah",
+      "last_name": "Alsalah",
+      "email": "efg@efg.com",
+      "status": "Active",
+      "description": "Senior project manager of 10 years."
     }
   ]
 }
