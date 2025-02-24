@@ -1,14 +1,14 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useEmployees } from "./Context/EmployeeContext";
 import { EmployeeFormData } from "./Types/employee";
+import { LoadingSpinner } from "./UI/LoadingSpinner";
 
 interface AddEmployeeProps {
   onClose: () => void;
 }
 
 const AddEmployee: React.FC<AddEmployeeProps> = ({ onClose }) => {
-  //const { refreshEmployees } = useEmployees();
-  const { addEmployee } = useEmployees()
+  const { addEmployee } = useEmployees();
   const [formData, setFormData] = useState<EmployeeFormData>({
     first_name: "",
     last_name: "",
@@ -18,15 +18,35 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ onClose }) => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
+  // Form validation
+  const validateForm = (): boolean => {
+    if (!formData.first_name.trim() || !formData.last_name.trim()) {
+      setError("First name and last name are required");
+      return false;
+    }
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setError("Please enter a valid email address");
+      return false;
+    }
+    
+    return true;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+
     setIsSubmitting(true);
     setError(null);
 
     try {
-      await addEmployee(formData); 
+      await addEmployee(formData);
       onClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
@@ -35,22 +55,36 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ onClose }) => {
     }
   };
 
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-4xl mx-auto" role="dialog" aria-labelledby="modal-title">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-semibold text-gray-800">Add New Employee</h2>
+        <h2 id="modal-title" className="text-2xl font-semibold text-gray-800">
+          Add New Employee
+        </h2>
         <button
           onClick={onClose}
-          className="text-gray-500 hover:text-gray-700"
+          className="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-100"
+          aria-label="Close modal"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
+
       <form onSubmit={handleSubmit} className="space-y-6">
         {error && (
-          <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-md">
+          <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-md" role="alert">
             <div className="flex">
               <div className="flex-shrink-0">
                 <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
@@ -66,32 +100,36 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ onClose }) => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="first_name" className="block text-sm font-medium text-gray-700">
               First Name
             </label>
             <input
-              id="firstName"
+              id="first_name"
+              name="first_name"
               type="text"
               value={formData.first_name}
-              onChange={(e) => setFormData({...formData, first_name: e.target.value})}
+              onChange={handleInputChange}
               placeholder="Enter first name"
-              className="block w-full px-4 py-3 rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="block w-full px-4 py-3 rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
               required
+              aria-required="true"
             />
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="last_name" className="block text-sm font-medium text-gray-700">
               Last Name
             </label>
             <input
-              id="lastName"
+              id="last_name"
+              name="last_name"
               type="text"
               value={formData.last_name}
-              onChange={(e) => setFormData({...formData, last_name: e.target.value})}
+              onChange={handleInputChange}
               placeholder="Enter last name"
-              className="block w-full px-4 py-3 rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="block w-full px-4 py-3 rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
               required
+              aria-required="true"
             />
           </div>
 
@@ -101,12 +139,14 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ onClose }) => {
             </label>
             <input
               id="email"
+              name="email"
               type="email"
               value={formData.email}
-              onChange={(e) => setFormData({...formData, email: e.target.value})}
+              onChange={handleInputChange}
               placeholder="Enter email"
-              className="block w-full px-4 py-3 rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="block w-full px-4 py-3 rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
               required
+              aria-required="true"
             />
           </div>
 
@@ -116,10 +156,12 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ onClose }) => {
             </label>
             <select
               id="status"
+              name="status"
               value={formData.status}
-              onChange={(e) => setFormData({...formData, status: e.target.value as EmployeeFormData['status']})}
-              className="block w-full px-4 py-3 rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              onChange={handleInputChange}
+              className="block w-full px-4 py-3 rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
               required
+              aria-required="true"
             >
               <option value="Active">Active</option>
               <option value="Terminated">Terminated</option>
@@ -135,38 +177,37 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ onClose }) => {
           </label>
           <textarea
             id="description"
+            name="description"
             value={formData.description}
-            onChange={(e) => setFormData({...formData, description: e.target.value})}
+            onChange={handleInputChange}
             placeholder="Enter description"
-            className="block w-full px-4 py-3 rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="block w-full px-4 py-3 rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
             rows={4}
           />
         </div>
 
-        <div className="flex justify-end mt-6">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
-            >
-                Cancel
-            </button>
+        <div className="flex justify-end space-x-3 mt-6">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+          >
+            Cancel
+          </button>
           <button
             type="submit"
             disabled={isSubmitting}
             className={`
-              className="px-4 py-2 text-sm font-medium text-gray bg-blue-600 rounded-md hover:bg-blue-700"
-
-              ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}
+              px-4 py-2 text-sm font-medium text-gray bg-purple-600 rounded-lg
+              hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500
+              disabled:opacity-50 disabled:cursor-not-allowed
+              flex items-center justify-center min-w-[120px]
             `}
           >
             {isSubmitting ? (
               <>
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Adding Employee...
+                <LoadingSpinner />
+                <span className="ml-2">Adding...</span>
               </>
             ) : (
               'Add Employee'

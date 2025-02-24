@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useEmployees } from "../Context/EmployeeContext";
 import EmployeeCard from "./EmployeeCard";
 import EmployeeFilters, { SortableFields } from "./EmployeeFilters"; 
 import AddEmployee from "../AddEmployee";
+import { LoadingSpinner } from "../UI/LoadingSpinner";
 
 const EmployeeList: React.FC = () => {
   const { 
@@ -12,45 +13,33 @@ const EmployeeList: React.FC = () => {
     refreshEmployees 
   } = useEmployees();
   
-  const [searchQuery, setSearchQuery] = useState(() => {
-    return localStorage.getItem('searchQuery') || '';
-  });
-  
-  const [sortField, setSortField] = useState<SortableFields>(() => {
-    return (localStorage.getItem('sortField') as SortableFields) || 'first_name';
-  });
-  
-  const [filterStatus, setFilterStatus] = useState(() => {
-    return localStorage.getItem('filterStatus') || '';
-  });
-  
+  const [searchQuery, setSearchQuery] = useState(() => localStorage.getItem('searchQuery') || '');
+  const [sortField, setSortField] = useState<SortableFields>(() => (localStorage.getItem('sortField') as SortableFields) || 'first_name');
+  const [filterStatus, setFilterStatus] = useState(() => localStorage.getItem('filterStatus') || '');
   const [showAddModal, setShowAddModal] = useState(false);
 
-  // Calculate statistics
   const totalEmployees = employees.length;
   const activeEmployees = employees.filter(emp => emp.status === 'Active').length;
 
-  const filteredAndSortedEmployees = React.useMemo(() => {
+  const filteredAndSortedEmployees = useMemo(() => {
     let result = [...employees];
 
-    // Apply search filter
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       result = result.filter(
         (employee) =>
           employee.first_name.toLowerCase().includes(query) ||
-          employee.last_name.toLowerCase().includes(query)
+          employee.last_name.toLowerCase().includes(query) ||
+          employee.description?.toLowerCase().includes(query)
       );
     }
 
-    // Apply status filter
     if (filterStatus) {
       result = result.filter(
         (employee) => employee.status === filterStatus
       );
     }
 
-    // Apply sorting
     result.sort((a, b) => {
       if (sortField === 'first_name') {
         return a.first_name.localeCompare(b.first_name);
@@ -67,23 +56,21 @@ const EmployeeList: React.FC = () => {
     return result;
   }, [employees, searchQuery, filterStatus, sortField]);
 
-  const handleCloseModal = () => {
-    setShowAddModal(false);
-    refreshEmployees();
-  };
-
   useEffect(() => {
     localStorage.setItem('searchQuery', searchQuery);
     localStorage.setItem('sortField', sortField);
     localStorage.setItem('filterStatus', filterStatus);
   }, [searchQuery, sortField, filterStatus]);
 
+  const handleCloseModal = () => {
+    setShowAddModal(false);
+    refreshEmployees();
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-[1400px] mx-auto px-4 py-8">
-        {/* Stats Container */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-          {/* Total Employees Card */}
           <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
             <div className="flex items-center">
               <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mr-4">
@@ -98,7 +85,6 @@ const EmployeeList: React.FC = () => {
             </div>
           </div>
 
-          {/* Active Employees Card */}
           <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
             <div className="flex items-center">
               <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center mr-4">
@@ -113,7 +99,6 @@ const EmployeeList: React.FC = () => {
             </div>
           </div>
 
-          {/* Add Employee Card */}
           <div 
             onClick={() => setShowAddModal(true)}
             className="bg-white rounded-xl p-4 shadow-sm border border-gray-200 cursor-pointer hover:shadow-md transition-shadow"
@@ -132,13 +117,10 @@ const EmployeeList: React.FC = () => {
           </div>
         </div>
 
-        {/* Main Content Container */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-          {/* Search and Filters */}
           <div className="border-b border-gray-200">
             <div className="p-4">
               <div className="flex flex-col lg:flex-row gap-4">
-                {/* Search Input */}
                 <div className="flex-1">
                   <div className="relative">
                     <input
@@ -164,7 +146,6 @@ const EmployeeList: React.FC = () => {
                   </div>
                 </div>
                 
-                {/* Filters */}
                 <div className="flex flex-col sm:flex-row gap-4">
                   <EmployeeFilters
                     currentStatus={filterStatus}
@@ -177,11 +158,10 @@ const EmployeeList: React.FC = () => {
             </div>
           </div>
 
-          {/* Employee Grid Container */}
           <div className="p-4">
             {loading ? (
               <div className="flex justify-center items-center h-[600px]">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500"></div>
+                <LoadingSpinner />
               </div>
             ) : error ? (
               <div className="flex justify-center items-center h-[600px]">
@@ -209,7 +189,6 @@ const EmployeeList: React.FC = () => {
         </div>
       </div>
 
-      {/* Add Employee Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg w-full max-w-md">
