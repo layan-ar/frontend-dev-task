@@ -1,8 +1,34 @@
-# Frontend Dev Task
+# Frontend Dev Task  
 
 ## Live Demo  
 You can access the deployed application here:  
-[Frontend Developer Task](https://frontend-dev-task-mu.vercel.app/)
+[Frontend Dev Task](https://frontend-dev-task-mu.vercel.app/)  
+
+## Running the Project Locally  
+
+To run this project on your local machine, follow these steps:  
+
+### **Prerequisites**  
+- Install [Node.js](https://nodejs.org/) (LTS version recommended)  
+- Install **npm** (comes with Node.js)  
+- Clone this repository:  
+
+  ```sh
+  git clone https://github.com/layan-ar/frontend-dev-task.git
+  cd frontend-dev-task
+
+  Step 2: Install Dependencies
+  - In the terminal paste: npm install
+
+  Step 3: Start the API
+  - In the terminal paste: npm run start-api
+
+  Step 4: Start the Frontend
+  - In the terminal paste: npm run dev
+
+  Step 5: Access the project:
+  - Once both the API and frontend are running, you can click on link provided after you pasted "npm run dev"
+
 
 
 
