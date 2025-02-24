@@ -79,8 +79,8 @@ const EmployeeList: React.FC = () => {
   }, [searchQuery, sortField, filterStatus]);
 
   return (
-    <div className="min-h-screen bg-gray-50 w-full">
-      <div className="max-w-[1400px] mx-auto px-4 py-8 w-full">
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-[1400px] mx-auto px-4 py-8">
         {/* Stats Container */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
           {/* Total Employees Card */}
@@ -133,7 +133,7 @@ const EmployeeList: React.FC = () => {
         </div>
 
         {/* Main Content Container */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200">
           {/* Search and Filters */}
           <div className="border-b border-gray-200">
             <div className="p-4">
@@ -178,24 +178,24 @@ const EmployeeList: React.FC = () => {
           </div>
 
           {/* Employee Grid Container */}
-          <div className="p-4 flex-grow">
+          <div className="p-4">
             {loading ? (
-              <div className="flex justify-center items-center min-h-[50vh]">
+              <div className="flex justify-center items-center h-[600px]">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500"></div>
               </div>
             ) : error ? (
-              <div className="flex justify-center items-center min-h-[50vh]">
+              <div className="flex justify-center items-center h-[600px]">
                 <div className="text-center text-red-500">{error}</div>
               </div>
             ) : filteredAndSortedEmployees.length === 0 ? (
-              <div className="flex justify-center items-center min-h-[50vh]">
+              <div className="flex justify-center items-center h-[600px]">
                 <div className="text-center text-gray-500">
                   <p className="text-xl font-semibold">No employees found</p>
                   <p className="mt-2">Try adjusting your search or filter criteria</p>
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-fr min-h-[50vh]">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-fr">
                 {filteredAndSortedEmployees.map((employee) => (
                   <EmployeeCard 
                     key={employee.id} 
