@@ -2,7 +2,7 @@
 import EmployeesList from "./EmployeeList/EmployeeList" 
 
 
-const updateEmployee = async (id: number, updatedData: object) => {
+export const updateEmployee = async (id: number, updatedData: object) => {
     
     
 
